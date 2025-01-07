@@ -17,21 +17,32 @@
 	});
 </script>
 
-<div class="flex min-h-screen flex-col">
-	<div class="navbar border-b bg-base-100">
+<div class="flex min-h-screen flex-col" data-theme="playful">
+	<div class="navbar bg-base-100 shadow-md">
 		<div class="flex-1">
-			<a href="/" class="btn btn-ghost gap-2 text-xl"> KitStarter </a>
+			<a href="/" class="font-display hover-lift btn btn-ghost gap-2 text-2xl">
+				<span class="text-primary">Kit</span>
+				<span class="text-secondary">Starter</span>
+			</a>
 		</div>
-		<div class="flex-none">
+		<div class="flex-none gap-2">
 			{#if session}
-				<a href="/private" class="btn btn-ghost">Dashboard</a>
+				<a href="/private" class="btn btn-ghost btn-outline hover:btn-secondary">Dashboard</a>
 			{:else}
 				<a href="/auth" class="btn btn-primary">Sign In</a>
 			{/if}
 		</div>
 	</div>
 
-	<div class="flex-1">
-		{@render children()}
+	<div class="flex-1 bg-base-100/50 p-4">
+		<div class="container mx-auto">
+			{@render children()}
+		</div>
 	</div>
+
+	<footer class="footer footer-center bg-base-200 p-4 text-base-content">
+		<div>
+			<p class="text-shadow">Made with 💖 using SvelteKit</p>
+		</div>
+	</footer>
 </div>
