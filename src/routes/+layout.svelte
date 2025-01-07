@@ -17,4 +17,21 @@
 	});
 </script>
 
-{@render children()}
+<div class="flex min-h-screen flex-col">
+	<div class="navbar border-b bg-base-100">
+		<div class="flex-1">
+			<a href="/" class="btn btn-ghost gap-2 text-xl"> KitStarter </a>
+		</div>
+		<div class="flex-none">
+			{#if session}
+				<a href="/private" class="btn btn-ghost">Dashboard</a>
+			{:else}
+				<a href="/auth" class="btn btn-primary">Sign In</a>
+			{/if}
+		</div>
+	</div>
+
+	<div class="flex-1">
+		{@render children()}
+	</div>
+</div>

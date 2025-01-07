@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { invalidate } from '$app/navigation';
-	import type { EventHandler } from 'svelte/elements';
-
-	import type { PageData } from './$types';
-
 	let { data } = $props();
-	let { supabase, user } = $derived(data);
+	let { session } = $derived(data);
 </script>
 
-Test
+<div class="prose max-w-none">
+	<h1>Welcome to your Dashboard</h1>
+	<p>
+		You're logged in as <span class="font-medium">{session?.user?.email}</span>. Use the navigation
+		menu to explore your private content.
+	</p>
+</div>
