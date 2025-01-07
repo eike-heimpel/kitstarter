@@ -2,6 +2,13 @@
 
 ## TODO
 
+- MongoDB
+- LemonSqueezy
+- Brevo
+- Privacy Notice
+- Imprint
+- Safer password enforcment
+- What else Konrad?
 
 A batteries-included SvelteKit template for quickly bootstrapping full-stack applications.
 
