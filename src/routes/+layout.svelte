@@ -19,16 +19,16 @@
 </script>
 
 <div class="flex min-h-screen flex-col">
-	<div class="navbar border-b bg-base-100">
+	<div class="navbar border-b bg-base-100 px-4">
 		<div class="flex-1">
-			<a href="/" class="btn btn-ghost gap-2 text-xl"> KitStarter </a>
+			<a href="/" class="btn btn-ghost gap-2 text-xl normal-case"> KitStarter </a>
 		</div>
 		{#if userAuth}
-			<div class="flex-none">
+			<div class="flex-none gap-4">
 				{#if session}
-					<a href="/private" class="btn btn-ghost">Dashboard</a>
+					<a href="/private" class="btn btn-ghost btn-sm px-6">Dashboard</a>
 				{:else}
-					<a href="/auth" class="btn btn-primary">Sign In</a>
+					<a href="/auth" class="btn btn-primary btn-sm px-6">Sign In</a>
 				{/if}
 			</div>
 		{/if}

@@ -2,6 +2,15 @@
 
 A batteries-included SvelteKit template for quickly bootstrapping full-stack applications.
 
+## TODO
+
+MongoDB
+LemonSqueezy
+Brevo
+Privacy Notice
+Imprint
+What else Konrad?
+
 ## Stack
 
 - 🎯 **SvelteKit** - Frontend framework with Tailwind CSS + Daisy UI
