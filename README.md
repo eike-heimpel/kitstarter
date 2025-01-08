@@ -55,6 +55,8 @@ You'll need to set up accounts with:
 4. **Brevo** - For transactional emails
 5. **Vercel** - For deployment
 
+You can disable auth by setting `PUBLIC_AUTH_ENABLED` to `false` in your `.env` file, in which case you can leave the supabase keys empty.
+
 Add the respective API keys to your `.env` file.
 
 ## Development

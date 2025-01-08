@@ -3,6 +3,26 @@
 
 	export let form: ActionData;
 	let activeTab = 'login';
+
+	// Password validation
+	let password = '';
+	let passwordErrors: string[] = [];
+
+	function validatePassword(pass: string) {
+		const errors = [];
+		if (pass.length < 8) errors.push('At least 8 characters');
+		if (!/[A-Z]/.test(pass)) errors.push('One uppercase letter');
+		if (!/[a-z]/.test(pass)) errors.push('One lowercase letter');
+		if (!/[0-9]/.test(pass)) errors.push('One number');
+		if (!/[!@#$%^&*(),.?":{}|<>]/.test(pass)) errors.push('One special character');
+		return errors;
+	}
+
+	function handlePasswordInput(event: Event) {
+		const input = event.target as HTMLInputElement;
+		password = input.value;
+		passwordErrors = validatePassword(password);
+	}
 </script>
 
 <div class="flex min-h-[80vh] items-center justify-center">
@@ -104,16 +124,30 @@
 							name="password"
 							type="password"
 							required
-							class="input input-bordered w-full"
+							class="input input-bordered w-full {passwordErrors.length > 0 ? 'input-error' : ''}"
 							placeholder="••••••••"
-							minlength="6"
+							minlength="8"
+							on:input={handlePasswordInput}
+							bind:value={password}
 						/>
-						<div class="label">
-							<span class="label-text-alt">Must be at least 6 characters</span>
+						<div class="label flex-col items-start gap-1">
+							<span class="label-text-alt">Password requirements:</span>
+							<ul class="label-text-alt list-inside list-disc">
+								{#each ['At least 8 characters', 'One uppercase letter', 'One lowercase letter', 'One number', 'One special character'] as requirement}
+									<li
+										class:text-success={!passwordErrors.includes(requirement)}
+										class:text-error={passwordErrors.includes(requirement)}
+									>
+										{requirement}
+									</li>
+								{/each}
+							</ul>
 						</div>
 					</div>
 
-					<button class="btn btn-primary w-full">Sign up</button>
+					<button class="btn btn-primary w-full" disabled={passwordErrors.length > 0}
+						>Sign up</button
+					>
 				</form>
 
 				<div class="divider">OR</div>
