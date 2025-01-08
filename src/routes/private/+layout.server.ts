@@ -1,8 +1,17 @@
 import { fail, redirect } from '@sveltejs/kit';
 
-/**
- * This file is necessary to ensure protection of all routes in the `private`
- * directory. It makes the routes in this directory _dynamic_ routes, which
- * send a server request, and thus trigger `hooks.server.ts`.
- **/
+export const load = async ({ locals: { safeGetSession } }) => {
 
+    // this app does not have a login or any form of private user area yet
+    throw redirect(301, '/');
+
+    const { session } = await safeGetSession();
+
+    if (!session) {
+        throw redirect(303, '/');
+    }
+
+    return {
+        session
+    };
+};

@@ -1,3 +1,26 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@font-face {
+    font-family: 'Geist';
+    src: url('/fonts/GeistVF.woff') format('woff');
+    font-weight: 100 900;
+    font-display: swap;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html {
+        @apply antialiased;
+    }
+
+    body {
+        @apply min-h-screen bg-base-100 text-base-content font-normal;
+    }
+}
+
+@layer utilities {
+    .text-balance {
+        text-wrap: balance;
+    }
+}

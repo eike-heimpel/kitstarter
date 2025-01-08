@@ -6,6 +6,23 @@ interface AuthActionData {
     message?: string;
 }
 
+export const load = async ({ locals: { safeGetSession } }) => {
+
+    // this app does not have a login or any form of private user area yet
+    throw redirect(301, '/');
+
+    const { session } = await safeGetSession();
+
+    if (!session) {
+        throw redirect(303, '/');
+    }
+
+    return {
+        session
+    };
+};
+
+
 export const actions: Actions = {
     magicLink: async ({ request, locals: { supabase } }) => {
         const formData = await request.formData();
