@@ -1,11 +1,6 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 
-interface AuthActionData {
-    error?: string;
-    message?: string;
-}
-
 export const actions: Actions = {
     magicLink: async ({ request, locals: { supabase } }) => {
         const formData = await request.formData();

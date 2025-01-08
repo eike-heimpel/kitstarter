@@ -1,12 +1,18 @@
 import { createBrowserClient, createServerClient, isBrowser } from '@supabase/ssr'
 import { PUBLIC_SUPABASE_ANON_KEY, PUBLIC_SUPABASE_URL } from '$env/static/public'
 import type { LayoutLoad } from './$types'
+import { userAuth } from '$lib/config'
 
 export const load: LayoutLoad = async ({ data, depends, fetch }) => {
     /**
      * Declare a dependency so the layout can be invalidated, for example, on
      * session refresh.
      */
+
+    if (!userAuth) {
+        return { session: null, supabase: null, user: null }
+    }
+
     depends('supabase:auth')
 
     const supabase = isBrowser()

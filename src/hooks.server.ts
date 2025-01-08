@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { type Handle, redirect } from '@sveltejs/kit'
 import { sequence } from '@sveltejs/kit/hooks'
+import { userAuth } from '$lib/config'
 
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public'
 
@@ -10,6 +11,17 @@ const supabase: Handle = async ({ event, resolve }) => {
      *
      * The Supabase client gets the Auth token from the request cookies.
      */
+
+    if (!userAuth) {
+        console.log('User auth is not set, supabase disabled at the moment')
+        return resolve(event)
+    }
+
+    if (!PUBLIC_SUPABASE_URL || !PUBLIC_SUPABASE_ANON_KEY) {
+        console.log('Supabase URL and/or anon key is not set, supabase disabled at the moment')
+        return resolve(event)
+    }
+
     event.locals.supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
         cookies: {
             getAll: () => event.cookies.getAll(),
@@ -63,6 +75,17 @@ const supabase: Handle = async ({ event, resolve }) => {
 }
 
 const authGuard: Handle = async ({ event, resolve }) => {
+
+    if (!userAuth) {
+        console.log('User auth is not set, supabase disabled at the moment')
+        return resolve(event)
+    }
+
+    if (!PUBLIC_SUPABASE_URL || !PUBLIC_SUPABASE_ANON_KEY) {
+        console.log('Supabase URL and/or anon key is not set, supabase disabled at the moment')
+        return resolve(event)
+    }
+
     const { session, user } = await event.locals.safeGetSession()
     event.locals.session = session
     event.locals.user = user
