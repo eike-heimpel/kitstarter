@@ -1,6 +1,24 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
+	import type { ActionResult } from '@sveltejs/kit';
+
 	let { data } = $props();
 	let { supabase, session } = $derived(data);
+
+	let showPasswordForm = $state(false);
+	let formMessage: { type: 'success' | 'error'; text: string } | null = $state(null);
+	let showToast = $state(false);
+	let toastMessage = $state('');
+	let toastType = $state<'success' | 'error'>('success');
+
+	function showNotification(message: string, type: 'success' | 'error') {
+		toastMessage = message;
+		toastType = type;
+		showToast = true;
+		setTimeout(() => {
+			showToast = false;
+		}, 3000);
+	}
 
 	const userStats = {
 		joinedDate: new Date(session?.user?.created_at || Date.now()).toLocaleDateString(),
@@ -12,10 +30,19 @@
 	const userMetadata = session?.user?.user_metadata || {};
 
 	async function handleSignOut() {
+		if (!supabase) return;
 		const { error } = await supabase.auth.signOut();
 		if (error) console.error('Error signing out:', error.message);
 	}
 </script>
+
+{#if showToast}
+	<div class="toast toast-end">
+		<div class="alert {toastType === 'success' ? 'alert-success' : 'alert-error'}">
+			<span>{toastMessage}</span>
+		</div>
+	</div>
+{/if}
 
 <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 	<!-- Profile Header -->
@@ -74,5 +101,88 @@
 				<p class="truncate text-2xl font-semibold">{userStats.userId}</p>
 			</div>
 		</div>
+	</div>
+
+	<!-- Password Change Section -->
+	<div class="mx-auto max-w-lg">
+		<button class="btn btn-primary w-full" on:click={() => (showPasswordForm = !showPasswordForm)}>
+			{showPasswordForm ? 'Hide Password Form' : 'Change Password'}
+		</button>
+
+		{#if showPasswordForm}
+			<div class="card mt-4 bg-base-100 shadow">
+				<div class="card-body">
+					<form
+						method="POST"
+						action="?/changePassword"
+						use:enhance={() => {
+							return async ({ result }) => {
+								if (result.type === 'failure') {
+									showNotification(result.data?.error || 'Failed to change password', 'error');
+								} else {
+									showNotification('Password changed successfully', 'success');
+									showPasswordForm = false;
+								}
+							};
+						}}
+						class="space-y-4"
+					>
+						{#if formMessage}
+							<div
+								class="alert {formMessage.type === 'success'
+									? 'alert-success'
+									: 'alert-error'} mb-4"
+							>
+								{formMessage.text}
+							</div>
+						{/if}
+
+						<div class="form-control w-full">
+							<label class="label" for="currentPassword">
+								<span class="label-text">Current Password</span>
+							</label>
+							<input
+								type="password"
+								name="currentPassword"
+								id="currentPassword"
+								class="input input-bordered w-full"
+								required
+								minlength="6"
+							/>
+						</div>
+
+						<div class="form-control w-full">
+							<label class="label" for="newPassword">
+								<span class="label-text">New Password</span>
+							</label>
+							<input
+								type="password"
+								name="newPassword"
+								id="newPassword"
+								class="input input-bordered w-full"
+								required
+								minlength="6"
+							/>
+						</div>
+
+						<div class="form-control w-full">
+							<label class="label" for="confirmPassword">
+								<span class="label-text">Confirm New Password</span>
+							</label>
+							<input
+								type="password"
+								name="confirmPassword"
+								id="confirmPassword"
+								class="input input-bordered w-full"
+								required
+								minlength="6"
+							/>
+						</div>
+
+						<button type="submit" class="btn btn-primary w-full">Change Password</button>
+					</form>
+				</div>
+			</div>
+		{/if}
 	</div>
 </div>

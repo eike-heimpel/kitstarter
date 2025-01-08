@@ -4,3 +4,4 @@
 - Make sure it knows it is using Supabase as a auth provider
 - Give best practices for MongoDB so it does not overcomplicate things. We need tp
 provide a clear MongoDB class so it only plays around in that no where else
+- make sure cline asks for help when getting stuck instead of trying to figure it out on its own
