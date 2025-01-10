@@ -133,23 +133,5 @@ Add the respective API keys to your `.env` file.
 
 ## AI Development with Cline
 
-This template includes predefined prompts for Cline to help you develop faster with AI assistance. Common tasks are documented for quick implementation:  
-
-- Authentication flows  
-- Payment integration  
-- Email setup  
-- Database schema design  
-- API endpoint creation  
-- UI component development  
-
-Use Cline to help you implement features by referencing the stack and existing code structure. For example:  
-```  
-"Hey Cline, help me implement a new protected route for user settings using our Supabase auth"  
-```  
-
-## Notes
-
-- This is a personal/friends template - feel free to modify for your needs  
-- Not all integrations are fully implemented yet - check the code for what's available  
-
-Happy coding! 🚀
+This template includes predefined prompts for Cline to help you develop faster with AI assistance. We suggest the first thing you ask Cline is to 
+adapt the starter to your design requirements as it will be easier to do this at the beginning.
