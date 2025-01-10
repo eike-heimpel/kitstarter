@@ -21,3 +21,15 @@ The development stack includes:
    - Keep files small and focused to avoid overcomplicating things.
    - Keep the code clean and readable.
 
+4. **Documentation**:
+
+    - Generate documentation for all features, components, and integrations in the ai-documentation folder.
+    - Use Markdown files with a consistent structure:
+        - Overview: A brief description of the feature or component.
+        - Usage: Instructions and examples for how to use it.
+        - Notes: Any important considerations, limitations, or best practices.
+        - Update documentation whenever changes are made to ensure accuracy.
+        - Keep the documentation clear and concise for easy reference.
+        - Leave notes that will make it easier for you to understand everything in the future.
+
+You can always use your own documentation to help you make changes.
