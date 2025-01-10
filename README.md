@@ -3,14 +3,35 @@
 
 A batteries-included SvelteKit template for quickly bootstrapping full-stack applications.
 
+---
+
+## Table of Contents
+
+1. [TODO](#todo)
+2. [Stack](#stack)
+3. [Quick Start](#quick-start)
+4. [Updating the Git Repository](#updating-the-git-repository)
+5. [Deployment](#deployment)
+   - [Deployment Guide](#deployment-guide)
+   - [Future Deployments](#future-deployments)
+   - [Troubleshooting](#troubleshooting)
+6. [Features](#features)
+7. [Environment Setup](#environment-setup)
+8. [Development](#development)
+9. [AI Development with Cline](#ai-development-with-cline)
+
+---
+
 ## TODO
 
-MongoDB  
-LemonSqueezy  
-Brevo  
-Privacy Notice  
-Imprint  
-What else Konrad?  
+- MongoDB  
+- LemonSqueezy  
+- Brevo  
+- Privacy Notice  
+- Imprint  
+- What else Konrad?  
+
+---
 
 ## Stack
 
@@ -21,34 +42,59 @@ What else Konrad?
 - ⚡ **Vercel** - Deployment, Edge Functions, and Blob Storage  
 - 📧 **Brevo** - Transactional emails (signup, magic links, password reset)  
 
+---
+
 ## Quick Start
 
 1. Clone this template:  
-```bash
-git clone https://github.com/yourusername/kitstarter.git my-app
-cd my-app
-```
-
+   ```bash
+   git clone https://github.com/yourusername/kitstarter.git my-app
+   cd my-app
+   ```
 2. Install dependencies:  
-```bash
-npm install
-```
-
+   ```bash
+   npm install
+   ```
 3. Copy the environment variables:  
-```bash
-cp .env.example .env
-```
-
+   ```bash
+   cp .env.example .env
+   ```
 4. Fill in your environment variables in `.env`  
-
 5. Start the development server:  
-```bash
-npm run dev
-```
+   ```bash
+   npm run dev
+   ```
 
-### Cline Prompt
+---
 
-Copy the prompt in `cline_prompt.md` to your clipboard and paste it into the Cline custom instructions in the Cline settings.
+## Updating the Git Repository
+
+Since this is a template, you'll need to update the remote repository to point to your own repository:
+
+1. **Remove the Existing Git Remote**:  
+   ```bash
+   git remote remove origin
+   ```
+
+2. **Add Your Repository**:  
+   Replace `your-repo-url` with the URL of your new repository:  
+   ```bash
+   git remote add origin your-repo-url
+   ```
+
+3. **Verify the Remote**:  
+   Ensure the new remote is set correctly:  
+   ```bash
+   git remote -v
+   ```
+
+4. **Push to Your Repository**:  
+   Push your changes to the new repository:  
+   ```bash
+   git push -u origin main
+   ```
+
+---
 
 ## Deployment
 
@@ -62,18 +108,18 @@ This project uses Vercel for deployment. We provide a simple script to handle th
 #### Deployment Steps  
 
 1. Make the setup script executable:  
-```bash
-chmod +x deploy-setup.sh
-```  
+   ```bash
+   chmod +x deploy-setup.sh
+   ```  
 
 2. Run the setup script with the desired environment flag:  
-```bash
-# For preview environment (default)
-./deploy-setup.sh
+   ```bash
+   # For preview environment (default)
+   ./deploy-setup.sh
 
-# For production
-./deploy-setup.sh --prod
-```  
+   # For production
+   ./deploy-setup.sh --prod
+   ```  
 
 The script will:  
 - Install Vercel CLI if needed  
@@ -83,7 +129,9 @@ The script will:
 
 Each environment (preview, production) can have its own set of environment variables. The script will prompt you to add each variable from your `.env.example` for the selected environment. Development environment variables are handled locally through your `.env` file.
 
-#### Future Deployments  
+---
+
+### Future Deployments  
 Pushing to the main branch will automatically trigger a preview deployment. For manual deployments:  
 
 ```bash
@@ -94,13 +142,17 @@ Pushing to the main branch will automatically trigger a preview deployment. For 
 ./deploy-setup.sh --prod
 ```  
 
-#### Troubleshooting  
+---
+
+### Troubleshooting  
 If you encounter any issues:  
-- Ensure you're logged into Vercel: \`vercel login\`  
+- Ensure you're logged into Vercel: `vercel login`  
 - Check your environment variables in the Vercel dashboard  
 - Verify your `.env.example` file lists all required variables  
 
 **Remember:** Never commit your `.env` file to Git!  
+
+---
 
 ## Features
 
@@ -110,6 +162,8 @@ If you encounter any issues:
 - 🛣️ Route protection  
 - ✉️ Email integration setup  
 - 💰 Payment infrastructure ready  
+
+---
 
 ## Environment Setup
 
@@ -121,14 +175,18 @@ You'll need to set up accounts with:
 4. **Brevo** - For transactional emails  
 5. **Vercel** - For deployment  
 
-You can disable auth by setting \`PUBLIC_AUTH_ENABLED\` to \`false\` in your `.env` file, in which case you can leave the supabase keys empty.  
+You can disable auth by setting `PUBLIC_AUTH_ENABLED` to `false` in your `.env` file, in which case you can leave the supabase keys empty.  
 
 Add the respective API keys to your `.env` file.  
+
+---
 
 ## Development
 
 - `npm run dev` - Start development server  
-- `vercel dev` - Start development server with Vercel
+- `vercel dev` - Start development server with Vercel  
+
+---
 
 ## AI Development with Cline
 
