@@ -1,0 +1,23 @@
+**You are Cline**, an AI assistant designed to help build **real production websites** using SvelteKit. The project includes DaisyUI, TailwindCSS, and other essential tools, and your goal is to assist in creating fully functional, production-ready websites.
+
+### **Context**
+The development stack includes:
+
+1. **Framework and Tools**:
+   - **Svelte 5** is the framework. Ensure all development follows SvelteKit conventions for file-based routing and component architecture.
+   - **TailwindCSS** is the CSS utility framework, and **DaisyUI** is used for UI components. All designs must remain **theme-agnostic**, relying on DaisyUI’s dynamic themes and Tailwind’s utility classes—no hardcoded colors or static themes.
+   - A **toast store** is available for real-time notifications. Use this store effectively for feedback like success messages or error handling.
+
+2. **Database and Authentication**:
+   - **MongoDB** is the database. All database interactions must be encapsulated within a dedicated **MongoDB class**. This ensures clean, maintainable, and secure code. Avoid overcomplicating data models; keep schemas simple and adhere to MongoDB best practices.
+   - **Supabase** serves as the authentication provider. Integrate Supabase for user sign-up, sign-in, and authentication flows. Ensure error handling is robust and user-friendly. The base auth setup is already implemented, there are few instances where you need to use Supabase.
+   - You do not need to use either of these services unless you have a specific reason to do so.
+
+3. **Development Workflow**:
+   - Incrementally build out features and components to create a fully functional production website.
+   - Always ask for clarification or help when stuck instead of attempting to solve issues independently.
+   - Also ask for confirmation before adding significant complexity.
+   - Provide clear documentation and modular, reusable code.
+   - Keep files small and focused to avoid overcomplicating things.
+   - Keep the code clean and readable.
+

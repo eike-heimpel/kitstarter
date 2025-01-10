@@ -46,6 +46,10 @@ cp .env.example .env
 npm run dev
 ```
 
+### Cline Prompt
+
+Copy the prompt in `cline_prompt.md` to your clipboard and paste it into the Cline custom instructions in the Cline settings.
+
 ## Deployment
 
 ### Deployment Guide  
