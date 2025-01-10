@@ -57,8 +57,6 @@ Copy the prompt in `cline_prompt.md` to your clipboard and paste it into the Cli
 This project uses Vercel for deployment. We provide a simple script to handle the entire setup process.  
 
 #### Prerequisites  
-- Node.js installed  
-- Git repository initialized  
 - `.env.example` file with all required variables listed  
 
 #### Deployment Steps  

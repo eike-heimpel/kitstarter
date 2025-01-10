@@ -12,8 +12,8 @@ export default {
 	plugins: [containerQueries, daisyui],
 
 	daisyui: {
-		themes: ['light', 'dark', 'cupcake'], // Add a few starter themes
-		darkTheme: 'dark', // Name of the dark theme
+		themes: ['light', 'business', 'cupcake'], // Add a few starter themes
+		darkTheme: 'business', // Name of the dark theme
 		base: true, // Applies background color and foreground color for root element
 		themeRoot: ':root', // The element that receives theme color CSS variables, default is :root
 		logs: false, // Disable console logs
