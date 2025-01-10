@@ -127,9 +127,8 @@ Add the respective API keys to your `.env` file.
 
 ## Development
 
-- \`npm run dev\` - Start development server  
-- \`npm run build\` - Build for production  
-- \`npm run preview\` - Preview production build  
+- `npm run dev` - Start development server  
+- `vercel dev` - Start development server with Vercel
 
 ## AI Development with Cline
 
