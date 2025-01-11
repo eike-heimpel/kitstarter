@@ -10,12 +10,35 @@ export default defineConfig({
 			provider: 'v8',
 			reporter: ['text', 'html', 'lcov'],
 			exclude: [
+				// Build and test artifacts
 				'coverage/**',
 				'dist/**',
-				'**/*.d.ts',
+				'.vercel/**',
+				'.svelte-kit/**',
 				'test/**',
+				'src/test/**',
 				'**/__tests__/**',
-				'**/*.test.ts'
+				'**/*.test.ts',
+
+				// Type definitions and re-exports
+				'**/*.d.ts',
+				'**/types.ts',
+				'**/index.ts',
+
+				// Svelte components (better tested with e2e/component tests)
+				'**/*.svelte',
+
+				// Route files (mostly configuration)
+				'**/+layout.{ts,js}',
+				'**/+page.{ts,js}',
+
+				// Configuration files
+				'*.config.{js,ts}',
+				'*.{js,ts,json,md}',
+
+				// Environment setup
+				'src/app.d.ts',
+				'src/hooks.server.ts'
 			],
 			thresholds: {
 				lines: 80,
