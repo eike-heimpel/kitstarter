@@ -1,0 +1,1 @@
+export const PUBLIC_SITE_URL = "http://localhost:5173"; export const PUBLIC_AUTH_ENABLED = "true";

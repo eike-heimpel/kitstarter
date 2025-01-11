@@ -1,1 +1,0 @@
-export const PUBLIC_AUTH_ENABLED = 'true'; 
