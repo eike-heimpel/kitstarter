@@ -8,24 +8,20 @@ export const GET: RequestHandler = async ({ url, locals: { supabase } }) => {
     const type = url.searchParams.get('type') as EmailOtpType | null
     const next = url.searchParams.get('next') ?? '/'
 
-    /**
-     * Clean up the redirect URL by deleting the Auth flow parameters.
-     *
-     * `next` is preserved for now, because it's needed in the error case.
-     */
-    const redirectTo = new URL(url)
-    redirectTo.pathname = next
-    redirectTo.searchParams.delete('token_hash')
-    redirectTo.searchParams.delete('type')
-
-    if (token_hash && type) {
-        const { error } = await supabase.auth.verifyOtp({ type, token_hash })
-        if (!error) {
-            redirectTo.searchParams.delete('next')
-            redirect(303, redirectTo)
-        }
+    if (!token_hash) {
+        throw redirect(303, '/auth/error?error=missing-token')
     }
 
-    redirectTo.pathname = '/auth/error'
-    redirect(303, redirectTo)
+    if (!type) {
+        throw redirect(303, '/auth/error')
+    }
+
+    const { error } = await supabase.auth.verifyOtp({ type, token_hash })
+
+    if (!error) {
+        throw redirect(303, next)
+    }
+
+    // If we get here, verification failed
+    throw redirect(303, '/auth/error')
 }
