@@ -68,7 +68,6 @@ describe('Private Route Protection', () => {
         const result = await load(mockLoadEvent as any);
 
         expect(result).toEqual({
-            supabase: mockSupabase,
             session: mockSession
         });
         expect(mockLoadEvent.depends).toHaveBeenCalledWith('supabase:auth');
@@ -121,7 +120,6 @@ describe('Private Route Protection', () => {
         const result = await load(mockLoadEvent as any);
 
         expect(result).toEqual({
-            supabase: mockSupabase,
             session: null
         });
         expect(mockSupabase.auth.getSession).not.toHaveBeenCalled();
