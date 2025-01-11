@@ -61,43 +61,6 @@ abstract class BaseService<T extends BaseDocument> {
 
 Services extend the BaseService to inherit common CRUD operations while adding collection-specific methods:
 
-```typescript
-import { BaseService } from './BaseService';
-import type { User } from '../types';
-
-export class UserService extends BaseService<User> {
-    constructor() {
-        super(users);
-    }
-
-    async findByEmail(email: string): Promise<User | null> {
-        return this.findOne({ email } as any);
-    }
-}
-
-// Export singleton instance
-export const userService = new UserService();
-```
-
-### Using Services
-
-Services are exported as singletons for consistent state management:
-
-```typescript
-import { userService } from '$lib/server/mongodb';
-
-// Create a user
-const newUser = await userService.create({
-    email: 'user@example.com',
-    name: 'John Doe'
-});
-
-// Find users with pagination
-const { items, total } = await userService.find({}, 1, 10);
-
-// Find by email (collection-specific method)
-const user = await userService.findByEmail('user@example.com');
-```
 
 ### API Routes
 

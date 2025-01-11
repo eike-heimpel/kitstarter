@@ -20,8 +20,14 @@ export const POST = async ({ request }: RequestEvent) => {
         const userData = await request.json();
 
         // Validate required fields
-        if (!userData.email || !userData.name) {
-            throw error(400, 'Email and name are required');
+        if (!userData.email || !userData.name || !userData.supabaseId) {
+            throw error(400, 'Email, name, and supabaseId are required');
+        }
+
+        // Check if user already exists with this supabaseId
+        const existingUserById = await userService.findBySupabaseId(userData.supabaseId);
+        if (existingUserById) {
+            throw error(409, 'User already exists');
         }
 
         const existingUser = await userService.findByEmail(userData.email);

@@ -15,6 +15,13 @@ export class UserService extends BaseService<User> {
     }
 
     /**
+     * Find a user by Supabase ID
+     */
+    async findBySupabaseId(supabaseId: string): Promise<User | null> {
+        return this.findOne({ supabaseId } as any);
+    }
+
+    /**
      * List users with pagination
      * @deprecated Use find() from BaseService instead
      */
