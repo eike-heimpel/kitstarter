@@ -1,6 +1,33 @@
-import { fail } from '@sveltejs/kit';
-import type { Actions } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
+import type { Actions, ServerLoad } from '@sveltejs/kit';
 import type { Session } from '@supabase/supabase-js';
+import { userAuth } from '$lib/config';
+
+export const load: ServerLoad = async ({ locals: { supabase }, depends }: {
+    locals: { supabase: any },
+    depends: (invalidation_key: string) => void
+}) => {
+    // Invalidate this load function when the session changes
+    depends('supabase:auth');
+
+    if (!userAuth) {
+        return {
+            supabase,
+            session: null
+        };
+    }
+
+    const { data: { session }, error } = await supabase.auth.getSession();
+
+    if (error || !session) {
+        throw redirect(303, '/auth');
+    }
+
+    return {
+        supabase,
+        session
+    };
+};
 
 export const actions = {
     changePassword: async ({ request, locals: { supabase, safeGetSession } }) => {
