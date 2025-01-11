@@ -305,4 +305,29 @@ describe('Password Change Actions', () => {
             error: 'Failed to update password'
         }));
     });
+
+    it('should handle non-Error objects during password update', async () => {
+        const mockUser = { email: 'test@example.com' };
+        mockSafeGetSession.mockResolvedValue({ user: mockUser });
+        mockSupabase.auth.signInWithPassword.mockResolvedValue({ error: null });
+        // Mock updateUser to reject with a non-Error object
+        mockSupabase.auth.updateUser.mockRejectedValue({ code: 'UNKNOWN_ERROR' });
+
+        const { actions } = await import('../+page.server');
+        const result = await actions.changePassword({
+            request: new Request('http://localhost', {
+                method: 'POST',
+                body: createMockFormData({
+                    currentPassword: 'current123',
+                    newPassword: 'newpassword123',
+                    confirmPassword: 'newpassword123'
+                })
+            }),
+            locals: { supabase: mockSupabase, safeGetSession: mockSafeGetSession }
+        } as any);
+
+        expect(result).toEqual(fail(500, {
+            error: 'Failed to update password'
+        }));
+    });
 }); 

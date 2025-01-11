@@ -107,6 +107,25 @@ describe('Auth Actions', () => {
                 error: 'Invalid email'
             }));
         });
+
+        it('should handle MongoDB user creation error during magic link', async () => {
+            const email = 'test@example.com';
+            vi.mocked(userService.findByEmail).mockResolvedValueOnce(null);
+            vi.mocked(userService.create).mockRejectedValueOnce(new Error('MongoDB error'));
+
+            const result = await actions.magicLink({
+                request: createMockRequest(email),
+                locals: { supabase: mockSupabase }
+            } as any);
+
+            expect(userService.create).toHaveBeenCalledWith({
+                email,
+                supabaseId: ''
+            });
+            expect(result).toEqual(fail(500, {
+                error: 'Failed to create user account'
+            }));
+        });
     });
 
     describe('signup', () => {
@@ -190,6 +209,63 @@ describe('Auth Actions', () => {
             expect(result).toEqual(fail(400, {
                 error: 'Email already registered'
             }));
+        });
+
+        it('should handle MongoDB user creation error during signup', async () => {
+            const email = 'test@example.com';
+            const password = '123456';
+            const userId = 'test-user-id';
+
+            vi.mocked(mockSupabase.auth.signUp).mockResolvedValueOnce({
+                data: { user: { id: userId } },
+                error: null
+            });
+            vi.mocked(userService.create).mockRejectedValueOnce(new Error('MongoDB error'));
+
+            try {
+                await actions.signup({
+                    request: createMockRequest(email, password),
+                    locals: { supabase: mockSupabase }
+                } as any);
+            } catch (error) {
+                // Ignore redirect response
+            }
+
+            // Verify the interactions occurred
+            expect(mockSupabase.auth.signUp).toHaveBeenCalledWith({
+                email,
+                password
+            });
+            expect(userService.create).toHaveBeenCalledWith({
+                email,
+                supabaseId: userId
+            });
+        });
+
+        it('should handle signup with missing user ID', async () => {
+            const email = 'test@example.com';
+            const password = '123456';
+
+            // Mock Supabase to return data but no user ID
+            vi.mocked(mockSupabase.auth.signUp).mockResolvedValueOnce({
+                data: { user: null },
+                error: null
+            });
+
+            try {
+                await actions.signup({
+                    request: createMockRequest(email, password),
+                    locals: { supabase: mockSupabase }
+                } as any);
+            } catch (error) {
+                // Ignore redirect response
+            }
+
+            // Verify user is created with empty supabaseId
+            expect(userService.create).toHaveBeenCalledWith({
+                email,
+                supabaseId: ''
+            });
         });
     });
 

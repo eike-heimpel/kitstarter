@@ -11,10 +11,17 @@ export const load: LayoutServerLoad = async ({ locals: { safeGetSession }, cooki
         }
     }
 
-    const { session } = await safeGetSession()
-    return {
-        session,
-        cookies: cookies.getAll(),
+    try {
+        const { session } = await safeGetSession()
+        return {
+            session,
+            cookies: cookies.getAll(),
+        }
+    } catch (error) {
+        // If session fetch fails, return null session but preserve cookies
+        return {
+            session: null,
+            cookies: cookies.getAll(),
+        }
     }
-
 }
