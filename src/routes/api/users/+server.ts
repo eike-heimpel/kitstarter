@@ -37,10 +37,13 @@ export const POST = async ({ request }: RequestEvent) => {
 
         const newUser = await userService.create(userData);
         return json(newUser, { status: 201 });
-    } catch (err) {
-        if (err instanceof Error) {
-            throw error(400, err.message);
+    } catch (err: any) {
+        // If it's already an error from @sveltejs/kit, rethrow it
+        if (err.status) {
+            throw err;
         }
+        // For other errors, return 500
+        console.error('Error creating user:', err);
         throw error(500, 'Internal server error');
     }
 };

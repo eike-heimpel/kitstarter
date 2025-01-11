@@ -89,7 +89,7 @@ export const actions: Actions = {
             // The user can be created later during their first login
         }
 
-        throw redirect(303, '/');
+        return redirect(303, '/');
     },
 
     login: async ({ request, locals: { supabase } }) => {
@@ -114,6 +114,6 @@ export const actions: Actions = {
             });
         }
 
-        throw redirect(303, '/private');
+        return redirect(303, '/private');
     }
 };
