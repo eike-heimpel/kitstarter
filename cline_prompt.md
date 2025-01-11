@@ -20,6 +20,14 @@ The development stack includes:
    - Provide clear documentation and modular, reusable code.
    - Keep files small and focused to avoid overcomplicating things.
    - Keep the code clean and readable.
+   - Write unit tests for all new functionality:
+     - Place tests in `__tests__` directories next to the files they test
+     - Follow existing patterns for mocking MongoDB and other services
+     - Ensure proper error case coverage
+     - Maintain 80% coverage for lines, functions, branches, and statements
+   - Run tests after making changes:
+     - Use `npm run test:unit` during development
+     - Use `npm run test:coverage` before completing work to verify coverage requirements
 
 4. **Documentation**:
 
