@@ -1,62 +1,57 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { MongoClient } from 'mongodb';
 
-// Mock mongodb
-vi.mock('mongodb', () => ({
-    MongoClient: vi.fn(() => ({
-        close: vi.fn().mockResolvedValue(undefined),
-        connect: vi.fn().mockResolvedValue(undefined),
-        db: vi.fn(),
-        options: {},
-        serverApi: undefined,
-        readConcern: undefined,
-        writeConcern: undefined,
-        readPreference: undefined,
-        bsonOptions: undefined,
-        logger: undefined
-    }))
+// Mock $env/static/private module
+vi.mock('$env/static/private', () => ({
+    get MONGODB_URI() {
+        return process.env.MONGODB_URI;
+    }
 }));
+
+// Mock mongodb
+vi.mock('mongodb', () => {
+    return {
+        MongoClient: vi.fn().mockImplementation((uri: string) => {
+            return {
+                close: vi.fn().mockResolvedValue(undefined)
+            };
+        })
+    };
+});
 
 describe('MongoDB Client', () => {
     const originalEnv = process.env;
-    const mockClose = vi.fn().mockResolvedValue(undefined);
+    const originalListeners = process.listeners('SIGTERM');
 
     beforeEach(() => {
         // Reset environment before each test
         process.env = { ...originalEnv };
-        // Reset MongoClient mock
-        vi.mocked(MongoClient).mockImplementation(() => ({
-            close: mockClose,
-            connect: vi.fn().mockResolvedValue(undefined),
-            db: vi.fn(),
-            options: {},
-            serverApi: undefined,
-            readConcern: undefined,
-            writeConcern: undefined,
-            readPreference: undefined,
-            bsonOptions: undefined,
-            logger: undefined
-        }));
         // Clear module cache to test different environment scenarios
         vi.resetModules();
+        // Clear all mocks
+        vi.clearAllMocks();
+        // Store original SIGTERM listeners
+        process.removeAllListeners('SIGTERM');
     });
 
     afterEach(() => {
         // Restore environment
         process.env = originalEnv;
-        // Clear all mocks
-        vi.clearAllMocks();
+        // Restore original SIGTERM listeners
+        process.removeAllListeners('SIGTERM');
+        originalListeners.forEach(listener => process.on('SIGTERM', listener));
     });
 
     it('should create a MongoDB client when URI is provided', async () => {
         // Set environment variable
-        process.env.MONGODB_URI = 'mongodb://localhost:27017/test';
+        const testUri = 'mongodb://localhost:27017/test';
+        process.env.MONGODB_URI = testUri;
 
         // Import the client (this will execute the file)
         const { mongodb } = await import('../client');
 
         // Verify MongoClient was called with correct URI
-        expect(MongoClient).toHaveBeenCalledWith('mongodb://localhost:27017/test');
+        expect(MongoClient).toHaveBeenCalledWith(testUri);
         expect(mongodb).toBeDefined();
     });
 
@@ -65,12 +60,19 @@ describe('MongoDB Client', () => {
         delete process.env.MONGODB_URI;
 
         // Attempt to import the client
-        await expect(import('../client')).rejects.toThrow('MONGODB_URI environment variable is not set');
+        await expect(() => import('../client')).rejects.toThrow('MONGODB_URI environment variable is not set');
     });
 
     it('should close client on SIGTERM', async () => {
         // Set environment variable
         process.env.MONGODB_URI = 'mongodb://localhost:27017/test';
+
+        // Get the close mock
+        const closeMock = vi.fn().mockResolvedValue(undefined);
+        // @ts-expect-error - Partial mock is sufficient for our tests
+        vi.mocked(MongoClient).mockImplementation(() => ({
+            close: closeMock
+        }));
 
         // Import the client
         await import('../client');
@@ -78,8 +80,11 @@ describe('MongoDB Client', () => {
         // Simulate SIGTERM
         process.emit('SIGTERM', 'SIGTERM');
 
+        // Wait for any promises to resolve
+        await new Promise(process.nextTick);
+
         // Verify close was called
-        expect(mockClose).toHaveBeenCalled();
+        expect(closeMock).toHaveBeenCalled();
     });
 
     it('should handle close errors gracefully', async () => {
@@ -91,17 +96,9 @@ describe('MongoDB Client', () => {
 
         // Mock close to reject
         const mockCloseError = new Error('Failed to close connection');
+        // @ts-expect-error - Partial mock is sufficient for our tests
         vi.mocked(MongoClient).mockImplementation(() => ({
-            close: vi.fn().mockRejectedValue(mockCloseError),
-            connect: vi.fn().mockResolvedValue(undefined),
-            db: vi.fn(),
-            options: {},
-            serverApi: undefined,
-            readConcern: undefined,
-            writeConcern: undefined,
-            readPreference: undefined,
-            bsonOptions: undefined,
-            logger: undefined
+            close: vi.fn().mockRejectedValue(mockCloseError)
         }));
 
         // Import the client
@@ -109,6 +106,9 @@ describe('MongoDB Client', () => {
 
         // Simulate SIGTERM
         process.emit('SIGTERM', 'SIGTERM');
+
+        // Wait for any promises to resolve
+        await new Promise(process.nextTick);
 
         // Verify error was logged
         expect(consoleSpy).toHaveBeenCalledWith(mockCloseError);
