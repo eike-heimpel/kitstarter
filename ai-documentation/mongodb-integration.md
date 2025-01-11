@@ -128,3 +128,58 @@ try {
     console.error('Error fetching user:', err);
     throw error(500, 'Internal server error');
 }
+```
+
+## Authentication Integration
+
+The MongoDB user system is integrated with Supabase authentication in the following ways:
+
+### User Creation
+
+1. **Magic Link Flow**:
+   - When a user requests a magic link, we check if they exist in MongoDB
+   - If they don't exist, a new user record is created with their email
+   - The `supabaseId` is initially empty and will be set on their first successful login
+
+2. **Sign Up Flow**:
+   - When a user signs up with email/password, we create both:
+     - A Supabase auth user
+     - A corresponding MongoDB user record
+   - The MongoDB user is created with the Supabase user ID
+   - If MongoDB creation fails, the signup continues but the user record will be created on their first login
+
+### Implementation
+
+The auth integration is handled in `src/routes/auth/+page.server.ts`:
+
+```typescript
+// Magic Link Example
+const existingUser = await userService.findByEmail(email);
+if (!existingUser) {
+    await userService.create({
+        email,
+        supabaseId: '', // Set after first login
+    });
+}
+
+// Signup Example
+const { data, error } = await supabase.auth.signUp({
+    email,
+    password
+});
+
+if (!error) {
+    await userService.create({
+        email,
+        supabaseId: data.user?.id || '',
+    });
+}
+```
+
+### Best Practices
+
+1. Always handle MongoDB errors gracefully in auth flows
+2. Use try-catch blocks around MongoDB operations
+3. Don't block critical auth paths on MongoDB operations
+4. Keep user data minimal during initial creation
+5. Update user data incrementally as needed

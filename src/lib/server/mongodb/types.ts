@@ -9,7 +9,6 @@ export interface BaseDocument {
 export interface User extends BaseDocument {
     supabaseId: string;
     email: string;
-    name: string;
     // Add other user fields as needed
 }
 
