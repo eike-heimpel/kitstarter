@@ -10,7 +10,7 @@
 	};
 
 	let { data } = $props();
-	let { supabase, session } = $derived(data);
+	let { session } = $derived(data);
 
 	let showPasswordForm = $state(false);
 
@@ -24,9 +24,8 @@
 	const userMetadata = session?.user?.user_metadata || {};
 
 	async function handleSignOut() {
-		if (!supabase) return;
-		const { error } = await supabase.auth.signOut();
-		if (error) console.error('Error signing out:', error.message);
+		const response = await fetch('/auth/signout', { method: 'POST' });
+		if (!response.ok) console.error('Error signing out');
 	}
 </script>
 

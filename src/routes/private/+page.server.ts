@@ -7,12 +7,10 @@ export const load: ServerLoad = async ({ locals: { supabase }, depends }: {
     locals: { supabase: any },
     depends: (invalidation_key: string) => void
 }) => {
-    // Invalidate this load function when the session changes
     depends('supabase:auth');
 
     if (!userAuth) {
         return {
-            supabase,
             session: null
         };
     }
@@ -24,7 +22,6 @@ export const load: ServerLoad = async ({ locals: { supabase }, depends }: {
     }
 
     return {
-        supabase,
         session
     };
 };
