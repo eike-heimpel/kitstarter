@@ -80,4 +80,79 @@ describe('BaseService', () => {
         expect(result.items).toEqual(mockDocs);
         expect(result.total).toBe(2);
     });
+
+    it('should update a document', async () => {
+        const service = new TestService();
+        const mockId = new ObjectId();
+        const update = { name: 'updated' };
+        const updatedDoc = {
+            _id: mockId,
+            name: 'updated',
+            createdAt: new Date(),
+            updatedAt: new Date()
+        };
+
+        mockCollection.findOneAndUpdate.mockResolvedValueOnce(updatedDoc);
+
+        const result = await service.update(mockId, update);
+        expect(result).toEqual(updatedDoc);
+        expect(mockCollection.findOneAndUpdate).toHaveBeenCalledWith(
+            { _id: mockId },
+            {
+                $set: {
+                    ...update,
+                    updatedAt: expect.any(Date)
+                }
+            },
+            { returnDocument: 'after' }
+        );
+    });
+
+    it('should delete a document', async () => {
+        const service = new TestService();
+        const mockId = new ObjectId();
+
+        mockCollection.deleteOne.mockResolvedValueOnce({ deletedCount: 1 });
+
+        const result = await service.delete(mockId);
+        expect(result).toBe(true);
+        expect(mockCollection.deleteOne).toHaveBeenCalledWith({ _id: mockId });
+    });
+
+    it('should return false when document not found for deletion', async () => {
+        const service = new TestService();
+        const mockId = new ObjectId();
+
+        mockCollection.deleteOne.mockResolvedValueOnce({ deletedCount: 0 });
+
+        const result = await service.delete(mockId);
+        expect(result).toBe(false);
+    });
+
+    it('should find one document by custom filter', async () => {
+        const service = new TestService();
+        const mockDoc = {
+            _id: new ObjectId(),
+            name: 'test',
+            createdAt: new Date(),
+            updatedAt: new Date()
+        };
+        const filter = { name: 'test' };
+
+        mockCollection.findOne.mockResolvedValueOnce(mockDoc);
+
+        const result = await service.findOne(filter);
+        expect(result).toEqual(mockDoc);
+        expect(mockCollection.findOne).toHaveBeenCalledWith(filter);
+    });
+
+    it('should return null when document not found', async () => {
+        const service = new TestService();
+        const filter = { name: 'nonexistent' };
+
+        mockCollection.findOne.mockResolvedValueOnce(null);
+
+        const result = await service.findOne(filter);
+        expect(result).toBeNull();
+    });
 });

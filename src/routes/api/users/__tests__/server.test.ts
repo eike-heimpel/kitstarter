@@ -191,5 +191,26 @@ describe('Users API', () => {
                 expect(err.body.message).toBe('User with this email already exists');
             }
         });
+
+        it('should handle database errors during creation', async () => {
+            vi.mocked(userService.findBySupabaseId).mockResolvedValueOnce(null);
+            vi.mocked(userService.findByEmail).mockResolvedValueOnce(null);
+            vi.mocked(userService.create).mockRejectedValueOnce(new Error('Database connection failed'));
+
+            try {
+                await POST({
+                    request: new Request('http://localhost/api/users', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(mockUserData)
+                    })
+                } as any);
+                // If we reach here, the test should fail
+                expect(true).toBe(false);
+            } catch (err: any) {
+                expect(err.status).toBe(500);
+                expect(err.body.message).toBe('Internal server error');
+            }
+        });
     });
 });

@@ -4,52 +4,19 @@ This document outlines the testing strategy for the KitStarter project, focusing
 
 ## Test Coverage
 
-### 1. MongoDB Services
-- **BaseService Tests** (`src/lib/server/mongodb/services/__tests__/BaseService.test.ts`)
-  - Core CRUD operations
-  - Pagination functionality
-  - Error handling
-  - Uses mocked MongoDB collections
+### 1. Server-Side Testing
+- MongoDB services and database interactions
+- API endpoints and server routes
+- Authentication flows and user management
+- Error handling and edge cases
+- Request/Response handling
 
-- **UserService Tests** (`src/lib/server/mongodb/services/__tests__/UserService.test.ts`)
-  - User-specific operations (findByEmail, findBySupabaseId)
-  - Extends BaseService functionality
-  - Handles null cases
-
-### 2. API Endpoints
-- **Users API Tests** (`src/routes/api/users/__tests__/+server.test.ts`)
-  - GET endpoint with pagination
-  - POST endpoint with validation
-  - Error handling (400, 409, 500 cases)
-  - Duplicate prevention
-  - Request/Response handling
-
-### 3. Authentication
-- **Auth Action Tests** (`src/routes/auth/__tests__/+page.server.test.ts`)
-  - Magic Link Authentication
-    - Email validation
-    - New user creation in MongoDB
-    - Existing user handling
-    - Supabase OTP integration
-  - Email/Password Signup
-    - Input validation
-    - Password requirements
-    - User creation in both Supabase and MongoDB
-    - Duplicate prevention
-  - Email/Password Login
-    - Input validation
-    - Credential verification
-    - Error handling
-  - Redirect Handling
-    - Success redirects to appropriate pages
-    - Error cases with proper status codes
-    - Form submission validation
-
-### 4. Toast Notifications
-- **Toast Store Tests** (`src/lib/components/__tests__/toastStore.test.ts`)
-  - Toast creation and removal
-  - Auto-removal functionality
-  - Multiple toasts handling
+### 2. Client-Side Testing
+- Svelte stores and state management
+- Component functionality
+- Form validation and submission
+- User interactions and events
+- Error states and loading states
 
 ## Test Setup
 
@@ -133,30 +100,21 @@ npm run test:coverage
 ```
 
 ### Coverage Configuration
-We use Vitest's built-in coverage reporting with v8. The configuration in `vite.config.ts` includes:
+We use Vitest's built-in coverage reporting with v8. The configuration excludes:
 
-```typescript
-test: {
-    coverage: {
-        provider: 'v8',
-        reporter: ['text', 'html', 'lcov'],
-        exclude: [
-            'coverage/**',
-            'dist/**',
-            '**/*.d.ts',
-            'test/**',
-            '**/__tests__/**',
-            '**/*.test.ts'
-        ],
-        thresholds: {
-            lines: 80,
-            functions: 80,
-            branches: 80,
-            statements: 80
-        }
-    }
-}
-```
+- Build artifacts (coverage/, dist/, .vercel/, .svelte-kit/)
+- Test files (test/, src/test/, **/__tests__/**, **/*.test.ts)
+- Type definitions and re-exports (**/*.d.ts, **/types.ts, **/index.ts)
+- Svelte components (better tested with e2e/component tests)
+- Route configuration files (+layout.{ts,js}, +page.{ts,js})
+- Configuration files (*.config.{js,ts})
+- Environment setup (src/app.d.ts, src/hooks.server.ts)
+
+Coverage thresholds are set to 80% for:
+- Lines
+- Functions
+- Branches
+- Statements
 
 Coverage reports are generated in:
 - HTML: `coverage/index.html`
@@ -165,10 +123,9 @@ Coverage reports are generated in:
 ## Test Organization
 
 Tests are organized following the same structure as the source code:
-- Service tests are placed in `__tests__` directories next to the services
-- API endpoint tests are placed in `__tests__` directories next to the endpoints
-- Component tests are placed in `__tests__` directories next to the components
-- Auth action tests are placed in `__tests__` directories next to the server actions
+- Tests are placed in `__tests__` directories next to the files they test
+- Each test file follows the naming convention `*.test.ts`
+- Test files mirror the structure of the source code they test
 
 ## Best Practices
 
