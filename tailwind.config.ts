@@ -13,7 +13,7 @@ export default {
 
 	daisyui: {
 		themes: ['light', 'business', 'cupcake'], // Add a few starter themes
-		darkTheme: 'business', // Name of the dark theme
+		darkTheme: 'cupcake', // Name of the dark theme
 		base: true, // Applies background color and foreground color for root element
 		themeRoot: ':root', // The element that receives theme color CSS variables, default is :root
 		logs: false, // Disable console logs
